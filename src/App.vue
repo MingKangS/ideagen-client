@@ -2,6 +2,7 @@
 import { ref, onMounted, watch, computed, onUnmounted } from "vue";
 import axios from "axios";
 import FiltersModal from "./components/FiltersModal.vue";
+import NewOrderForm from "./components/NewOrderForm.vue";
 
 const showModal = ref(false);
 const appliedFilters = ref({});
@@ -15,12 +16,6 @@ const sortedOrders = computed(() => {
   });
 });
 const sortBy = ref("object_id");
-const newOrder = ref({
-  customer_name: "",
-  status: "Processing",
-  category_id: "",
-  country: "",
-});
 
 const fetchOrdersIntervalId = ref("");
 
@@ -73,22 +68,6 @@ const setSortBy = (newSortBy) => {
   sortBy.value = newSortBy;
 };
 
-const createOrder = async () => {
-  try {
-    await axios.post("http://localhost:3000/orders", newOrder.value);
-    alert("Order created successfully!");
-    fetchOrders();
-    newOrder.value = {
-      customer_name: "",
-      status: "Processing",
-      category_id: "",
-      country: "",
-    };
-  } catch (error) {
-    console.error("Error creating order:", error);
-  }
-};
-
 watch(appliedFilters, fetchOrders, { deep: true });
 
 onMounted(() => {
@@ -130,27 +109,7 @@ onUnmounted(() => {
         </tr>
       </tbody>
     </table>
-
-    <h2>Create New Order</h2>
-    <form @submit.prevent="createOrder">
-      <input
-        v-model="newOrder.customer_name"
-        placeholder="Customer Name"
-        required
-      />
-      <select v-model="newOrder.category_id" required>
-        <option value="" disabled>Select Category</option>
-        <option
-          v-for="category in categories"
-          :key="category.object_id"
-          :value="category.object_id"
-        >
-          {{ category.name }}
-        </option>
-      </select>
-      <input v-model="newOrder.country" placeholder="Country" required />
-      <button type="submit">Create Order</button>
-    </form>
+    <NewOrderForm :categoryIdToNameMap="categoryIdToNameMap" />
     <FiltersModal
       v-if="showModal"
       :setFilters="setFilters"

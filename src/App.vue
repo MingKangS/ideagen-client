@@ -43,7 +43,9 @@ const closeFilterModal = () => {
 
 const fetchCategories = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/categories");
+    const response = await axios.get(
+      `${process.env.VUE_APP_SERVER_URL}/categories`
+    );
     const newCategoryIdToNameMap = {};
     response.data.forEach((category) => {
       newCategoryIdToNameMap[category.object_id] = category.name;
@@ -57,7 +59,9 @@ const fetchCategories = async () => {
 const fetchOrders = async () => {
   try {
     let query = new URLSearchParams(appliedFilters.value).toString();
-    const response = await axios.get(`http://localhost:3000/orders?${query}`);
+    const response = await axios.get(
+      `${process.env.VUE_APP_SERVER_URL}/orders?${query}`
+    );
     orders.value = response.data;
   } catch (error) {
     console.error("Error fetching orders:", error);

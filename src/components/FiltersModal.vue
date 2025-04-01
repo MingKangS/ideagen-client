@@ -29,7 +29,9 @@ const isConfirmCloseModal = ref(false);
 
 const fetchFilterValues = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/orders/filters");
+    const response = await axios.get(
+      `${process.env.VUE_APP_SERVER_URL}/orders/filters`
+    );
     filterValues.value = response.data;
   } catch (error) {
     console.error("Error fetching categories:", error);

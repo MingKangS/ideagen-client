@@ -16,7 +16,10 @@ const newOrder = ref({
 const createOrder = async () => {
   console.log(newOrder.value);
   try {
-    await axios.post("http://localhost:3000/orders", newOrder.value);
+    await axios.post(
+      `${process.env.VUE_APP_SERVER_URL}/orders`,
+      newOrder.value
+    );
     newOrder.value = {
       customer_name: "",
       category_id: "",
